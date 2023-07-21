@@ -65,6 +65,9 @@ class TodoList {
   // allCompleted()
   //   returns true if all tasks have completed: true,
   //   false otherwise... use .every() ???
+  allCompleted() {
+    return this.todos.every(task => task.completed === true);
+  }
 
   // findMatchingTasks( text )
   //   returns an array of all the tasks whose
@@ -116,3 +119,5 @@ mainList.setCompletedStatus( 1, false );
 
 mainList.updateDescription(2, 'Introduction to React');
 console.log(mainList.todos);
+
+console.log(mainList.allCompleted());
