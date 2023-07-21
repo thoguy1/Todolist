@@ -8,9 +8,15 @@ class TodoList {
     this.todos = data;
   }
 
-
   // addTask( description )
   //  push a new task object onto the array of tasks
+  addTask(description) {
+    const newTask = {
+      description: description,
+      completed: false
+    };
+    this.todos.push(newTask);
+  }
 
   // removeTask( index )
   //   remove a task from the array, and return it
@@ -64,7 +70,10 @@ const todoListData = [
 ];
 
 const mainList = new TodoList( todoListData );
-// mainList.addTask( 'Master JS classes' );
+
+mainList.addTask( 'Master JS classes' );
+console.log(mainList.todos);
+
 // mainList.removeTask( 0 );
 // mainList.moveTask( 2, 0 );
 // mainList.setCompletedStatus( 0 );
