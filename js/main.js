@@ -46,12 +46,21 @@ class TodoList {
     if (index >= 0 && index < this.todos.length) {
       this.todos[index].completed = completed;
     } else {
-      console.log('Invalid index. No task removed.');
+      console.log('Invalid index. No task completed status changed.');
       return null;
     } 
   }
 
   // updateDescription( index, newDescription )
+  updateDescription( index, newDescription ) {
+    if (index >= 0 && index < this.todos.length) {
+      this.todos[index].description = newDescription;
+    } else {
+      console.log('Invalid index. No task description updated.');
+      return null;
+    }
+  }
+
 
   // allCompleted()
   //   returns true if all tasks have completed: true,
@@ -104,4 +113,6 @@ mainList.moveTask( 2, 0 );
 
 mainList.setCompletedStatus( 0 );
 mainList.setCompletedStatus( 1, false );
+
+mainList.updateDescription(2, 'Introduction to React');
 console.log(mainList.todos);
