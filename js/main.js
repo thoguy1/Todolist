@@ -31,6 +31,14 @@ class TodoList {
 
   // moveTask( oldIndex, newIndex )
   //  maybe you can use removeTask() to accomplish this?
+  moveTask(oldIndex, newIndex) {
+    if (oldIndex >= 0 && oldIndex < this.todos.length && newIndex >= 0 && newIndex < this.todos.length) {
+      const taskToMove = this.removeTask(oldIndex);
+      this.todos.splice(newIndex, 0, taskToMove); // insert the removed task into the new Index.
+    } else {
+      console.log('Invalid index. Task not moved.');
+    }
+  }
 
   // setCompletedStatus( index, completed=true )
 
@@ -82,7 +90,9 @@ const mainList = new TodoList( todoListData );
 mainList.addTask( 'Master JS classes' );
 
 console.log(mainList.removeTask( 0 ));
+
+mainList.moveTask( 2, 0 );
 console.log(mainList.todos);
-// mainList.moveTask( 2, 0 );
-// mainList.setCompletedStatus( 0 );
+
+mainList.setCompletedStatus( 0 );
 // mainList.setCompletedStatus( 1, false );
