@@ -20,6 +20,14 @@ class TodoList {
 
   // removeTask( index )
   //   remove a task from the array, and return it
+  removeTask(index) {
+    if (index >= 0 && index < this.todos.length) {
+      return this.todos.splice(index, 1)[0]; // return the removed task
+    } else {
+      console.log('Invalid index. No task removed.');
+      return null;
+    } 
+  }
 
   // moveTask( oldIndex, newIndex )
   //  maybe you can use removeTask() to accomplish this?
@@ -72,9 +80,9 @@ const todoListData = [
 const mainList = new TodoList( todoListData );
 
 mainList.addTask( 'Master JS classes' );
-console.log(mainList.todos);
 
-// mainList.removeTask( 0 );
+console.log(mainList.removeTask( 0 ));
+console.log(mainList.todos);
 // mainList.moveTask( 2, 0 );
 // mainList.setCompletedStatus( 0 );
 // mainList.setCompletedStatus( 1, false );
