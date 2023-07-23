@@ -126,7 +126,7 @@ const todoListData = [
 
 const mainList = new TodoList( todoListData );
 
-mainList.addTask( 'Master JS classes' );
+//mainList.addTask( 'Master JS classes' );
 
 // console.log(mainList.removeTask( 0 ));
 
@@ -146,8 +146,39 @@ mainList.addTask( 'Master JS classes' );
 //   console.log('All tasks have been completed.')
 // });
 //mainList.taskDescription = '';
-mainList.simpleDescription = 'Cleaning the house';
+// mainList.simpleDescription = 'Cleaning the house';
 
-console.log(mainList.taskDescription);
+// console.log(mainList.taskDescription);
 
+const itemText = document.querySelector('#itemText');
+const olParent = document.querySelector('#list');
+const errorMessageNode = document.querySelector('#errorMessage');
 
+// When page loads, loop through the initial todo items ( todoList )
+// and add each of them to the parent <ol> as new <li> children
+// with checkbox, label, description etc
+
+const renderTodoList = function(){
+  // Clear the existing list before re-rendering
+  olParent.innerHTML = '';
+  for(let i = 0; i < todoListData.length; i++){
+    let checkedString = '';
+    let completedClass = '';
+    if( todoListData[i].completed ){
+      checkedString = 'checked';
+      completedClass = 'completed'
+    }
+
+    const newLi = `
+      <li class="todo ${completedClass}" data-index="${i}">
+        <label>
+          <input type="checkbox" ${checkedString}>
+          ${todoListData[i].description}
+        </label>
+      </li>
+    `;
+    olParent.innerHTML += newLi; // append to list!
+  }
+}; // renderTodoList()
+
+renderTodoList();

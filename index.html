@@ -4,10 +4,27 @@
   <link rel="shortcut icon" href="#"><!-- no favicon error -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OOP JS</title>
+  <title>To-Do, To-Doing, To-Done</title>
+  <link rel="stylesheet" href="css/style.css">
   <script src="js/main.js" defer></script>
 </head>
-<body>
-  <p>Please check the console for output.</p>
+<body>  
+
+  <div id="container">
+
+    <h1>✔︎ To-Do, To-Doing, To-Done ✔︎</h1>
+
+    <ol id="list"></ol>
+
+    <form id="addForm">
+      <input type="text" id="itemText">
+      <button id="addButton">Add Task</button>
+      <button id="deleteButton">Delete Task</button>
+      <div id="errorMessage"></div>
+    </form>
+
+
+  </div><!-- #container -->
+
 </body>
 </html>
