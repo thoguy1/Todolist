@@ -8,7 +8,6 @@ class TodoList {
     this.todos = data;
   }
 
-  // addTask( description )
   //  push a new task object onto the array of tasks
   addTask(description) {
     const newTask = {
@@ -18,8 +17,7 @@ class TodoList {
     this.todos.push(newTask);
   }
 
-  // removeTask( index )
-  //   remove a task from the array, and return it
+  // remove a task from the array, and return it
   removeTask(index) {
     if (index >= 0 && index < this.todos.length) {
       return this.todos.splice(index, 1)[0]; // return the removed task
@@ -29,7 +27,6 @@ class TodoList {
     } 
   }
 
-  // moveTask( oldIndex, newIndex )
   //  maybe you can use removeTask() to accomplish this?
   moveTask(oldIndex, newIndex) {
     if (oldIndex >= 0 && oldIndex < this.todos.length && newIndex >= 0 && newIndex < this.todos.length) {
@@ -40,7 +37,7 @@ class TodoList {
     }
   }
 
-  // setCompletedStatus( index, completed=true )
+
   // if completed status is not passed as a paramenter, completed will be true by default
   setCompletedStatus( index, completed=true ){
     if (index >= 0 && index < this.todos.length) {
@@ -51,7 +48,7 @@ class TodoList {
     } 
   }
 
-  // updateDescription( index, newDescription )
+  // Update task description by passing the index of the task and the new description
   updateDescription( index, newDescription ) {
     if (index >= 0 && index < this.todos.length) {
       this.todos[index].description = newDescription;
@@ -61,17 +58,23 @@ class TodoList {
     }
   }
 
-
-  // allCompleted()
   //   returns true if all tasks have completed: true,
   //   false otherwise... use .every() ???
   allCompleted() {
     return this.todos.every(task => task.completed === true);
   }
 
-  // findMatchingTasks( text )
   //   returns an array of all the tasks whose
   //   descriptions include the given text
+  findMatchingTasks( text ) {
+    const results = [];
+    for(const task of this.todos){
+      if(task.description === text) {
+        results.push(task);
+      }
+    }
+    return results;
+  }
 
 
   // ADVANCED:
@@ -110,14 +113,18 @@ const mainList = new TodoList( todoListData );
 
 mainList.addTask( 'Master JS classes' );
 
-console.log(mainList.removeTask( 0 ));
+// console.log(mainList.removeTask( 0 ));
 
-mainList.moveTask( 2, 0 );
+// mainList.moveTask( 2, 0 );
 
-mainList.setCompletedStatus( 0 );
-mainList.setCompletedStatus( 1, false );
+// mainList.setCompletedStatus( 0 );
+// mainList.setCompletedStatus( 1, false );
 
-mainList.updateDescription(2, 'Introduction to React');
-console.log(mainList.todos);
+// mainList.updateDescription(2, 'Introduction to React');
+// console.log(mainList.todos);
 
-console.log(mainList.allCompleted());
+// console.log(mainList.allCompleted());
+
+console.log(mainList.findMatchingTasks('Look at JS OOP'));
+
+
