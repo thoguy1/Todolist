@@ -19,7 +19,7 @@ class TodoList {
 
   // remove a task from the array, and return it
   removeTask(index) {
-    if (index >= 0 && index < this.todos.length) {
+    if(index >= 0 && index < this.todos.length) {
       return this.todos.splice(index, 1)[0]; // return the removed task
     } else {
       console.log('Invalid index. No task removed.');
@@ -29,7 +29,7 @@ class TodoList {
 
   //  maybe you can use removeTask() to accomplish this?
   moveTask(oldIndex, newIndex) {
-    if (oldIndex >= 0 && oldIndex < this.todos.length && newIndex >= 0 && newIndex < this.todos.length) {
+    if(oldIndex >= 0 && oldIndex < this.todos.length && newIndex >= 0 && newIndex < this.todos.length) {
       const taskToMove = this.removeTask(oldIndex); // get the task object that we want to move
       this.todos.splice(newIndex, 0, taskToMove); // insert the removed task object into the new Index.
     } else {
@@ -40,7 +40,7 @@ class TodoList {
 
   // if completed status is not passed as a paramenter, completed will be true by default
   setCompletedStatus( index, completed=true ){
-    if (index >= 0 && index < this.todos.length) {
+    if(index >= 0 && index < this.todos.length) {
       this.todos[index].completed = completed;
     } else {
       console.log('Invalid index. No task completed status changed.');
@@ -50,7 +50,7 @@ class TodoList {
 
   // Update task description by passing the index of the task and the new description
   updateDescription( index, newDescription ) {
-    if (index >= 0 && index < this.todos.length) {
+    if(index >= 0 && index < this.todos.length) {
       this.todos[index].description = newDescription;
     } else {
       console.log('Invalid index. No task description updated.');
@@ -79,13 +79,28 @@ class TodoList {
 
   // ADVANCED:
 
-  // onAllCompleted( callbackFn )
   //   run the provided callback function when
   //   the last incomplete task is completed (or removed?)
-
+  onAllCompleted( callbackFn ) {
+    if(this.allCompleted()) {
+      callbackFn();
+    }
+  }
 
   // Try out some getters and setters, i.e. hide the 
   // internals of this class from direct outside access
+  #coolDescription = 'Dancing at a nightclub';
+
+  get taskDescription() {
+    return this.#coolDescription;
+  }
+
+  set simpleDescription(newDescription) {
+    if(newDescription.trim().length === 0) {
+      throw new Error('No empty strings allowed');
+    }
+    this.#coolDescription = newDescription;
+  }
 
   // BONUS: use this class in the Todo-list app
   // from last week, i.e. connect it to the DOM
@@ -125,6 +140,14 @@ mainList.addTask( 'Master JS classes' );
 
 // console.log(mainList.allCompleted());
 
-console.log(mainList.findMatchingTasks('Look at JS OOP'));
+// console.log(mainList.findMatchingTasks('Look at JS OOP'));
+
+// mainList.onAllCompleted(() => {
+//   console.log('All tasks have been completed.')
+// });
+//mainList.taskDescription = '';
+mainList.simpleDescription = 'Cleaning the house';
+
+console.log(mainList.taskDescription);
 
 
