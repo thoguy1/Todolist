@@ -131,8 +131,10 @@ class TodoList {
 
 // console.log(mainList.taskDescription);
 
-let todoListData;
 
+// If localstorage has a todoListData array, then use it
+// Otherwise use the default array.
+let todoListData;
 //Retrieve localStorage
 const savedTodos = JSON.parse(localStorage.getItem('todos'));
 if(Array.isArray(savedTodos)){
@@ -154,17 +156,15 @@ if(Array.isArray(savedTodos)){
   ];
 }
 
-const mainList = new TodoList( todoListData );
+const mainList = new TodoList(todoListData);
 const itemTextNode = document.querySelector('#itemText');
 const olParent = document.querySelector('#list');
 const errorMessageNode = document.querySelector('#errorMessage');
 const completedMessage = document.querySelector('#allCompletedMessage');
 const addForm = document.querySelector('#addForm');
 
-// When page loads, loop through the initial todo items ( todoList )
-// and add each of them to the parent <ol> as new <li> children
-// with checkbox, label, description etc
-
+// UI
+// Render the todo list array on the screen
 const renderTodoList = function(){
   // Clear the existing list before re-rendering
   olParent.innerHTML = '';
@@ -175,7 +175,7 @@ const renderTodoList = function(){
       checkedString = 'checked';
       completedClass = 'completed'
     }
-
+    // Assign an index number on each list so we know which one is clicked
     const newLi = `
       <li class="todo ${completedClass}" data-index="${i}" draggable="true">
         <label>
@@ -202,7 +202,7 @@ const handleEditButtons = function() {
       editTaskDescription(taskIndex);  
     });
   });
-};
+}; // handleEditButtons()
 
 const handleDeleteButtons = function() {
   const deleteButtons = document.querySelectorAll('.deleteButton');
@@ -215,7 +215,7 @@ const handleDeleteButtons = function() {
       saveTodosToLocalStorage();
     });
   });
-};
+}; // handleDeleteButtons()
 
 const editTaskDescription = function(index){
   const taskDescription = mainList.todos[index].description;
@@ -226,24 +226,26 @@ const editTaskDescription = function(index){
 
     saveTodosToLocalStorage();
   }
-};
+}; // editTaskDescription()
 
+// Save todo list to local storage with 'todos' as key name
 const saveTodosToLocalStorage = function(){
   localStorage.setItem('todos', JSON.stringify(mainList.todos));
-};
+}; // saveTodosToLocalStorage()
 
 let draggedItem = null;
 
 const handleDragStart = function(ev){
-  draggedItem = ev.target;
-};
+  draggedItem = ev.target; // identify the dragged task
+}; // handleDragStart()
 
 const handleDragOver = function(ev){
   ev.preventDefault();
-};
+}; // handleDragOver()
 
 const handleDrop = function(ev) {
   ev.preventDefault();
+  // Identify the drop location which is the closest location where the task is dropped
   const dropTarget = ev.target.closest('.todo');
   const dropIndex = parseInt(dropTarget.dataset.index);
   const dragIndex = parseInt(draggedItem.dataset.index);
@@ -252,10 +254,9 @@ const handleDrop = function(ev) {
 
   renderTodoList();
   saveTodosToLocalStorage();
-
   // Reset draggedItem to null after drop
   draggedItem = null;
-};
+}; // handleDrop()
 
 // add drag event listeners to each li element
 const addDragListeners = function(){
@@ -269,6 +270,7 @@ const addDragListeners = function(){
 
 renderTodoList();
 
+// Add even handler to the list by adding and removing a class when it's checked or unchecked
 olParent.addEventListener('change', function(ev){
   const liParent = ev.target.closest('li.todo');
   if(ev.target.checked){
