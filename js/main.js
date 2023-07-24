@@ -181,6 +181,24 @@ const renderTodoList = function(){
     `;
     olParent.innerHTML += newLi; // append to list!
   }
+
+  const editButtons = document.querySelectorAll('.editButton');
+  editButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      const taskIndex = parseInt(this.dataset.index);
+      editTaskDescription(taskIndex);  
+    });
+  });
+
+  const editTaskDescription = function(index){
+    const taskDescription = mainList.todos[index].description;
+    const newDescription = prompt('Edit the task description:', taskDescription);
+    if(newDescription.trim().length > 0) {
+      mainList.updateDescription(index, newDescription);
+      renderTodoList();
+    }
+  };
+
   const deleteButtons = document.querySelectorAll('.deleteButton');
   deleteButtons.forEach(button => {
     button.addEventListener('click', function(){
