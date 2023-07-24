@@ -76,7 +76,6 @@ class TodoList {
     return results;
   }
 
-
   // ADVANCED:
 
   //   run the provided callback function when
@@ -178,7 +177,7 @@ const renderTodoList = function(){
     }
 
     const newLi = `
-      <li class="todo ${completedClass}" data-index="${i}">
+      <li class="todo ${completedClass}" data-index="${i}" draggable="true">
         <label>
           <input type="checkbox" ${checkedString}>
           ${mainList.todos[i].description}
@@ -191,8 +190,8 @@ const renderTodoList = function(){
   }
 
   handleEditButtons();
-
   handleDeleteButtons();
+  addDragListeners();
 }; // renderTodoList()
 
 const handleEditButtons = function() {
@@ -233,6 +232,43 @@ const saveTodosToLocalStorage = function(){
   localStorage.setItem('todos', JSON.stringify(mainList.todos));
 };
 
+let draggedItem = null;
+
+const handleDragStart = function(ev){
+  draggedItem = ev.target;
+};
+
+const handleDragOver = function(ev){
+  ev.preventDefault();
+};
+
+const handleDrop = function(ev) {
+  ev.preventDefault();
+  const dropTarget = ev.target.closest('.todo');
+  const dropIndex = parseInt(dropTarget.dataset.index);
+  const dragIndex = parseInt(draggedItem.dataset.index);
+
+  mainList.moveTask(dragIndex, dropIndex);
+
+  renderTodoList();
+  saveTodosToLocalStorage();
+
+  // Reset draggedItem to null after drop
+  draggedItem = null;
+};
+
+// add drag event listeners to each li element
+const addDragListeners = function(){
+  const todoItems = document.querySelectorAll('.todo');
+  todoItems.forEach(item => {
+    item.addEventListener('dragstart', handleDragStart);
+    item.addEventListener('dragover', handleDragOver);
+    item.addEventListener('drop', handleDrop);
+  });
+};
+
+renderTodoList();
+
 olParent.addEventListener('change', function(ev){
   const liParent = ev.target.closest('li.todo');
   if(ev.target.checked){
@@ -254,9 +290,7 @@ olParent.addEventListener('change', function(ev){
 });
 
 addForm.addEventListener('submit', function(ev) {
-
   ev.preventDefault();
-
   const newItemText = itemTextNode.value;
   
   if(newItemText.trim().length === 0) {
@@ -281,4 +315,5 @@ itemTextNode.addEventListener('input', function(ev){
   }
 });
 
-renderTodoList();
+
+
