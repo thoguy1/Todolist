@@ -175,13 +175,32 @@ const renderTodoList = function(){
           <input type="checkbox" ${checkedString}>
           ${mainList.todos[i].description}
         </label>
-        <button>Edit</button>
-        <button>Delete</button>
+        <button class="editButton" data-index="${i}">Edit</button>
+        <button class="deleteButton" data-index="${i}">Delete</button>
       </li>
     `;
     olParent.innerHTML += newLi; // append to list!
   }
+  const deleteButtons = document.querySelectorAll('.deleteButton');
+  deleteButtons.forEach(button => {
+    button.addEventListener('click', function(){
+      const taskIndex = parseInt(this.dataset.index);
+      mainList.removeTask(taskIndex);
+      renderTodoList();
+    });
+  });
 }; // renderTodoList()
+
+olParent.addEventListener('change', function(ev){
+  const liParent = ev.target.closest('li.todo');
+  if(ev.target.checked){
+    liParent.classList.add('completed');
+  } else {
+    liParent.classList.remove('completed');
+  }
+  const listIndex = parseInt(liParent.dataset.index);
+  mainList.setCompletedStatus(listIndex, ev.target.checked);
+});
 
 const addForm = document.querySelector('#addForm');
 
@@ -192,7 +211,7 @@ addForm.addEventListener('submit', function(ev) {
   const newItemText = itemTextNode.value;
   
   if(newItemText.trim().length === 0) {
-    errorMessageNode.innerHTML = 'Please enter a description for your item.';
+    errorMessageNode.innerHTML = 'Please enter a description for your task.';
     itemTextNode.classList.add('error');
     return; // early return
   }
@@ -200,6 +219,16 @@ addForm.addEventListener('submit', function(ev) {
   mainList.addTask(newItemText);
 
   renderTodoList();
+  itemTextNode.value = '';
+  itemTextNode.focus();
+});  // add task button handler
+
+itemTextNode.addEventListener('input', function(ev){
+  if(ev.target.value.trim().length > 0){
+    errorMessageNode.innerHTML = '';
+    itemTextNode.classList.remove('error');
+  }
 });
+
 
 renderTodoList();
