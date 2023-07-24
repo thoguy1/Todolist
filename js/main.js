@@ -108,24 +108,6 @@ class TodoList {
 
 // Example of using the class:
 
-// Initial data
-const todoListData = [
-  {
-    description: 'Make amazing Todo list app',
-    completed: true,
-  },
-  {
-    description: 'Understand JS ES6 functional array methods',
-    completed: false,
-  },
-  {
-    description: 'Look at JS OOP',
-    completed: false,
-  },
-];
-
-const mainList = new TodoList( todoListData );
-
 //mainList.addTask( 'Master JS classes' );
 
 // console.log(mainList.removeTask( 0 ));
@@ -150,6 +132,30 @@ const mainList = new TodoList( todoListData );
 
 // console.log(mainList.taskDescription);
 
+let todoListData;
+
+//Retrieve localStorage
+const savedTodos = JSON.parse(localStorage.getItem('todos'));
+if(Array.isArray(savedTodos)){
+  todoListData = savedTodos;
+} else { // Initial data
+  todoListData = [
+    {
+      description: 'Make amazing Todo list app',
+      completed: true,
+    },
+    {
+      description: 'Understand JS ES6 functional array methods',
+      completed: false,
+    },
+    {
+      description: 'Look at JS OOP',
+      completed: false,
+    },
+  ];
+}
+
+const mainList = new TodoList( todoListData );
 const itemTextNode = document.querySelector('#itemText');
 const olParent = document.querySelector('#list');
 const errorMessageNode = document.querySelector('#errorMessage');
@@ -182,6 +188,12 @@ const renderTodoList = function(){
     olParent.innerHTML += newLi; // append to list!
   }
 
+  handleEditButtons();
+
+  handleDeleteButtons();
+}; // renderTodoList()
+
+const handleEditButtons = function() {
   const editButtons = document.querySelectorAll('.editButton');
   editButtons.forEach(button => {
     button.addEventListener('click', function() {
@@ -189,25 +201,31 @@ const renderTodoList = function(){
       editTaskDescription(taskIndex);  
     });
   });
+};
 
-  const editTaskDescription = function(index){
-    const taskDescription = mainList.todos[index].description;
-    const newDescription = prompt('Edit the task description:', taskDescription);
-    if(newDescription.trim().length > 0) {
-      mainList.updateDescription(index, newDescription);
-      renderTodoList();
-    }
-  };
-
+const handleDeleteButtons = function() {
   const deleteButtons = document.querySelectorAll('.deleteButton');
   deleteButtons.forEach(button => {
     button.addEventListener('click', function(){
       const taskIndex = parseInt(this.dataset.index);
       mainList.removeTask(taskIndex);
       renderTodoList();
+      
+      saveTodosToLocalStorage();
     });
   });
-}; // renderTodoList()
+};
+
+const editTaskDescription = function(index){
+  const taskDescription = mainList.todos[index].description;
+  const newDescription = prompt('Edit the task description:', taskDescription);
+  if(newDescription.trim().length > 0) {
+    mainList.updateDescription(index, newDescription);
+    renderTodoList();
+
+    saveTodosToLocalStorage();
+  }
+};
 
 olParent.addEventListener('change', function(ev){
   const liParent = ev.target.closest('li.todo');
@@ -218,6 +236,10 @@ olParent.addEventListener('change', function(ev){
   }
   const listIndex = parseInt(liParent.dataset.index);
   mainList.setCompletedStatus(listIndex, ev.target.checked);
+  renderTodoList();
+
+  saveTodosToLocalStorage();
+
 });
 
 const addForm = document.querySelector('#addForm');
@@ -239,6 +261,8 @@ addForm.addEventListener('submit', function(ev) {
   renderTodoList();
   itemTextNode.value = '';
   itemTextNode.focus();
+
+  saveTodosToLocalStorage();
 });  // add task button handler
 
 itemTextNode.addEventListener('input', function(ev){
@@ -248,5 +272,8 @@ itemTextNode.addEventListener('input', function(ev){
   }
 });
 
+const saveTodosToLocalStorage = function(){
+  localStorage.setItem('todos', JSON.stringify(mainList.todos));
+};
 
 renderTodoList();
