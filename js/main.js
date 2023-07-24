@@ -159,6 +159,8 @@ const mainList = new TodoList( todoListData );
 const itemTextNode = document.querySelector('#itemText');
 const olParent = document.querySelector('#list');
 const errorMessageNode = document.querySelector('#errorMessage');
+const completedMessage = document.querySelector('#allCompletedMessage');
+const addForm = document.querySelector('#addForm');
 
 // When page loads, loop through the initial todo items ( todoList )
 // and add each of them to the parent <ol> as new <li> children
@@ -227,6 +229,10 @@ const editTaskDescription = function(index){
   }
 };
 
+const saveTodosToLocalStorage = function(){
+  localStorage.setItem('todos', JSON.stringify(mainList.todos));
+};
+
 olParent.addEventListener('change', function(ev){
   const liParent = ev.target.closest('li.todo');
   if(ev.target.checked){
@@ -236,13 +242,16 @@ olParent.addEventListener('change', function(ev){
   }
   const listIndex = parseInt(liParent.dataset.index);
   mainList.setCompletedStatus(listIndex, ev.target.checked);
-  renderTodoList();
+  if(mainList.allCompleted()) {
+    completedMessage.innerHTML = 'Congratulation! All tasks have been completed.';
+  } else {
+    completedMessage.innerHTML = '';
+  }
+
+  renderTodoList(); 
 
   saveTodosToLocalStorage();
-
 });
-
-const addForm = document.querySelector('#addForm');
 
 addForm.addEventListener('submit', function(ev) {
 
@@ -271,9 +280,5 @@ itemTextNode.addEventListener('input', function(ev){
     itemTextNode.classList.remove('error');
   }
 });
-
-const saveTodosToLocalStorage = function(){
-  localStorage.setItem('todos', JSON.stringify(mainList.todos));
-};
 
 renderTodoList();
