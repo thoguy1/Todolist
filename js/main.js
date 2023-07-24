@@ -150,7 +150,7 @@ const mainList = new TodoList( todoListData );
 
 // console.log(mainList.taskDescription);
 
-const itemText = document.querySelector('#itemText');
+const itemTextNode = document.querySelector('#itemText');
 const olParent = document.querySelector('#list');
 const errorMessageNode = document.querySelector('#errorMessage');
 
@@ -161,10 +161,10 @@ const errorMessageNode = document.querySelector('#errorMessage');
 const renderTodoList = function(){
   // Clear the existing list before re-rendering
   olParent.innerHTML = '';
-  for(let i = 0; i < todoListData.length; i++){
+  for(let i = 0; i < mainList.todos.length; i++){
     let checkedString = '';
     let completedClass = '';
-    if( todoListData[i].completed ){
+    if( mainList.todos[i].completed ){
       checkedString = 'checked';
       completedClass = 'completed'
     }
@@ -173,12 +173,33 @@ const renderTodoList = function(){
       <li class="todo ${completedClass}" data-index="${i}">
         <label>
           <input type="checkbox" ${checkedString}>
-          ${todoListData[i].description}
+          ${mainList.todos[i].description}
         </label>
+        <button>Edit</button>
+        <button>Delete</button>
       </li>
     `;
     olParent.innerHTML += newLi; // append to list!
   }
 }; // renderTodoList()
+
+const addForm = document.querySelector('#addForm');
+
+addForm.addEventListener('submit', function(ev) {
+
+  ev.preventDefault();
+
+  const newItemText = itemTextNode.value;
+  
+  if(newItemText.trim().length === 0) {
+    errorMessageNode.innerHTML = 'Please enter a description for your item.';
+    itemTextNode.classList.add('error');
+    return; // early return
+  }
+
+  mainList.addTask(newItemText);
+
+  renderTodoList();
+});
 
 renderTodoList();
