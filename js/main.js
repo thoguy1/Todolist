@@ -133,7 +133,7 @@ class TodoList {
 
 
 // If localstorage has a todoListData array, then use it
-// Otherwise use the default array.
+// Otherwise use the default todoListData.
 let todoListData;
 //Retrieve localStorage
 const savedTodos = JSON.parse(localStorage.getItem('todos'));
@@ -155,8 +155,9 @@ if(Array.isArray(savedTodos)){
     },
   ];
 }
-
+// Create an instance of class TodoList
 const mainList = new TodoList(todoListData);
+// Grab the elements on screen and put them as global variables
 const itemTextNode = document.querySelector('#itemText');
 const olParent = document.querySelector('#list');
 const errorMessageNode = document.querySelector('#errorMessage');
@@ -175,7 +176,7 @@ const renderTodoList = function(){
       checkedString = 'checked';
       completedClass = 'completed'
     }
-    // Assign an index number on each list so we know which one is clicked
+    // Render and assign an index to each button so we know which one is clicked
     const newLi = `
       <li class="todo ${completedClass}" data-index="${i}" draggable="true">
         <label>
@@ -194,16 +195,20 @@ const renderTodoList = function(){
   addDragListeners();
 }; // renderTodoList()
 
+// UI
+// Activate all the edit buttons on the screen
 const handleEditButtons = function() {
   const editButtons = document.querySelectorAll('.editButton');
   editButtons.forEach(button => {
     button.addEventListener('click', function() {
-      const taskIndex = parseInt(this.dataset.index);
+      const taskIndex = parseInt(this.dataset.index); 
+      // get the task index from the clicked button and passed that index to edit the task
       editTaskDescription(taskIndex);  
     });
   });
 }; // handleEditButtons()
 
+// Activate all the delete buttons on the screen
 const handleDeleteButtons = function() {
   const deleteButtons = document.querySelectorAll('.deleteButton');
   deleteButtons.forEach(button => {
@@ -217,6 +222,7 @@ const handleDeleteButtons = function() {
   });
 }; // handleDeleteButtons()
 
+// Edit the task based on the selected index in the parameter
 const editTaskDescription = function(index){
   const taskDescription = mainList.todos[index].description;
   const newDescription = prompt('Edit the task description:', taskDescription);
@@ -233,10 +239,10 @@ const saveTodosToLocalStorage = function(){
   localStorage.setItem('todos', JSON.stringify(mainList.todos));
 }; // saveTodosToLocalStorage()
 
-let draggedItem = null;
+let draggedTask = null; // No task is being dragged
 
 const handleDragStart = function(ev){
-  draggedItem = ev.target; // identify the dragged task
+  draggedTask = ev.target; // identify the dragged task
 }; // handleDragStart()
 
 const handleDragOver = function(ev){
@@ -248,14 +254,14 @@ const handleDrop = function(ev) {
   // Identify the drop location which is the closest location where the task is dropped
   const dropTarget = ev.target.closest('.todo');
   const dropIndex = parseInt(dropTarget.dataset.index);
-  const dragIndex = parseInt(draggedItem.dataset.index);
+  const dragIndex = parseInt(draggedTask.dataset.index);
 
   mainList.moveTask(dragIndex, dropIndex);
 
   renderTodoList();
   saveTodosToLocalStorage();
-  // Reset draggedItem to null after drop
-  draggedItem = null;
+  // Reset draggedTask to null after drop
+  draggedTask = null;
 }; // handleDrop()
 
 // add drag event listeners to each li element
@@ -266,7 +272,7 @@ const addDragListeners = function(){
     item.addEventListener('dragover', handleDragOver);
     item.addEventListener('drop', handleDrop);
   });
-};
+}; // addDragListeners()
 
 renderTodoList();
 
@@ -287,17 +293,16 @@ olParent.addEventListener('change', function(ev){
   }
 
   renderTodoList(); 
-
   saveTodosToLocalStorage();
 });
 
+// Handle the submission of user input for task description inside the text input field
 addForm.addEventListener('submit', function(ev) {
   ev.preventDefault();
   const newItemText = itemTextNode.value;
   
   if(newItemText.trim().length === 0) {
     errorMessageNode.innerHTML = 'Please enter a description for your task.';
-    itemTextNode.classList.add('error');
     return; // early return
   }
 
@@ -308,12 +313,12 @@ addForm.addEventListener('submit', function(ev) {
   itemTextNode.focus();
 
   saveTodosToLocalStorage();
-});  // add task button handler
+}); 
 
+// When user start typing on the input field, the previous error message disappear
 itemTextNode.addEventListener('input', function(ev){
   if(ev.target.value.trim().length > 0){
     errorMessageNode.innerHTML = '';
-    itemTextNode.classList.remove('error');
   }
 });
 
